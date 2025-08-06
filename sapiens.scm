@@ -13,16 +13,25 @@
               (display (car elems) port)
               (loop (cdr elems))))))))
 
-  (define (concatenate lst)
+  (define (string-join sep lst)
     (let loop ((result (car lst)) (lst (cdr lst)))
       (if (null? lst)
         result
         (begin
-          (loop (string-append result (car lst)) (cdr lst))))))
+          (loop (string-append result sep (car lst)) (cdr lst))))))
 
-  (define (t name elems)
-    (let ((content (concatenate elems)))
-      (sprintf "<~A>~A</~A>" name content name)))
+  (define (t tag args)
+    (if (pair? (car args))
+    (let ((attrs (string-join " " (car args))) (content (string-join "" (cdr args))))
+      (sprintf "<~A ~A>~A</~A>" tag attrs content tag))
+    (let ((content (string-join "" args)))
+      (sprintf "<~A>~A</~A>" tag content tag))))
+
+  (define (attr k v)
+    (sprintf "~A=\"~A\"" k v))
+
+  (define (id v) (attr "id" v))
+  (define (class v) (attr "class" v))
 
   (define (a . elems) (t "a" elems))
   (define (abbr . elems) (t "abbr" elems))
