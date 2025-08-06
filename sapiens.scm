@@ -16,8 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 |#
 (module sapiens *
-  (import scheme)
-  (import (chicken format))
+  (import
+    scheme filepath
+    (chicken format)
+    (chicken file)
+  )
+
+  (define (dir name page)
+    (create-directory name #t)
+    (move-file page (string-append name (string (filepath:path-separator)) page))
+    name)
 
   (define (page name . elems)
     (call-with-output-file name
@@ -25,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         (display "<!DOCTYPE html>" port)
         (let loop ((elems elems))
           (if (null? elems)
-            #t
+            name
             (begin
               (display (car elems) port)
               (loop (cdr elems))))))))
@@ -38,6 +46,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
           (loop (string-append result sep (car lst)) (cdr lst))))))
 
   (define (t tag args)
+    ;; TODO: Refactor
     (if (pair? (car args))
     (let ((attrs (string-join " " (car args))) (content (string-join "" (cdr args))))
       (sprintf "<~A ~A>~A</~A>" tag attrs content tag))
