@@ -15,17 +15,143 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 |#
-(module sapiens *
+(module sapiens (
+  dir
+  page
+  t
+  attr
+  id
+  class
+  a
+  abbr
+  address
+  area
+  article
+  aside
+  audio
+  b
+  base
+  bdi
+  bdo
+  blockquote
+  body
+  br
+  button
+  canvas
+  caption
+  cite
+  code
+  col
+  colgroup
+  data
+  datalist
+  dd
+  del
+  details
+  dfn
+  dialog
+  div
+  dl
+  dt
+  em
+  embed
+  fieldset
+  figcaption
+  figure
+  footer
+  form
+  h1
+  head
+  header
+  hgroup
+  hr
+  html
+  i
+  iframe
+  img
+  input
+  ins
+  kbd
+  label
+  legend
+  li
+  link
+  main
+  map
+  mark
+  menu
+  meta
+  meter
+  nav
+  noscript
+  object
+  ol
+  optgroup
+  option
+  output
+  p
+  picture
+  pre
+  progress
+  q
+  rp
+  rt
+  ruby
+  s
+  samp
+  script
+  search
+  section
+  select
+  slot
+  small
+  source
+  span
+  strong
+  style
+  sub
+  summary
+  sup
+  table
+  tbody
+  td
+  template
+  textarea
+  tfoot
+  th
+  thead
+  time
+  title
+  tr
+  track
+  u
+  ul
+  var
+  video
+  wbr
+  xmp
+)
   (import
     scheme filepath
     (chicken format)
     (chicken file)
   )
 
-  (define (dir name page)
-    (create-directory name #t)
-    (move-file page (string-append name (string (filepath:path-separator)) page))
-    name)
+  (define (override-dir name)
+    (if (directory-exists? name)
+      (delete-directory name #t))
+    (create-directory name #t))
+
+  (define (dir name item)
+    (override-dir name)
+    (let ((sep (string (filepath:path-separator))))
+      (if (directory-exists? item)
+        (begin
+          (rename-file item (string-append name sep item))
+          name)
+        (begin
+          (move-file item (string-append name sep item))
+          name))))
 
   (define (page name . elems)
     (call-with-output-file name
