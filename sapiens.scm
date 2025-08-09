@@ -173,7 +173,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
           (loop (string-append result sep (car lst)) (cdr lst))))))
 
   (define (t tag args)
-    ;; TODO: Refactor
     (let ((head (car args)) (tail (cdr args)))
     (if (pair? head)
       (if (null? tail)

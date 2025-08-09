@@ -1,6 +1,6 @@
 (import sapiens)
 
-;; This would create an index.html file inside static/blog/
+; This would create index.html and about.html files inside static/blog/
 (dir "static"
   (dir "blog"
     (page "index.html"
@@ -37,7 +37,7 @@
   )
 )
 
-;; This would return the dependencies require to render latex in a page
+; This would return the dependencies require to render latex in a page
 (define (latex-deps)
   `(
     ,(link `(
@@ -46,13 +46,13 @@
       ,(attr "integrity" "sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP")
       ,(attr "crossorigin" "anonymous")
     ))
-    ,(script `
+    ,(script `(
      ,(attr "defer" "defer")
      ,(attr "src" "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js")
      ,(attr "integrity" "sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6")
      ,(attr "crossorigin" "anonymous")
     )
-    ,(script `
+    ,(script `(
      ,(attr "defer" "defer")
      ,(attr "src" "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js")
      ,(attr "integrity" "sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh")
