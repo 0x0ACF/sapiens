@@ -173,14 +173,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
   (define (t tag args)
     ;; TODO: Refactor
-    (if (pair? (car args))
-    (let ((attrs (string-join " " (car args))) (content (string-join "" (cdr args))))
-      (sprintf "<~A ~A>~A</~A>" tag attrs content tag))
-    (let ((content (string-join "" args)))
-      (sprintf "<~A>~A</~A>" tag content tag))))
+    (let ((head (car args)) (tail (cdr args)))
+    (if (pair? head)
+      (if (null? tail)
+        (let ((attrs (string-join " " head)))
+          (sprintf "<~A ~A></~A>" tag attrs tag))
+        (let ((attrs (string-join " " head)) (content (string-join "" tail)))
+          (sprintf "<~A ~A>~A</~A>" tag attrs content tag)))
+      (let ((content (string-join "" args)))
+        (sprintf "<~A>~A</~A>" tag content tag)))))
 
-  (define (attr k v)
-    (sprintf "~A=\"~A\"" k v))
+  (define (attr k . v)
+    (let ((fmt "~A=\"~A\""))
+      (if (null? v)
+        (sprintf fmt k k)
+        (sprintf fmt k (car v)))))
 
   (define (id v) (attr "id" v))
   (define (class v) (attr "class" v))
