@@ -135,23 +135,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     scheme filepath
     (chicken format)
     (chicken file)
+    (chicken base)
   )
 
-  (define (override-dir name)
-    (if (directory-exists? name)
-      (delete-directory name #t))
-    (create-directory name #t))
+  (define (create-dir name)
+    (when (not(directory-exists? name))
+      (create-directory name #t)))
 
-  (define (dir name item)
-    (override-dir name)
-    (let ((sep (string (filepath:path-separator))))
-      (if (directory-exists? item)
-        (begin
-          (rename-file item (string-append name sep item))
-          name)
-        (begin
-          (move-file item (string-append name sep item))
-          name))))
+  (define (dir name . items)
+    (create-dir name)
+    (let loop ((items items))
+      (when (not(null? items))
+        (let ((item (car items)) (sep (string (filepath:path-separator))))
+          (if (directory-exists? item)
+            (rename-file item (string-append name sep item))
+            (when (file-exists? item)
+              (move-file item (string-append name sep item)))))
+        (loop (cdr items))))
+    name)
 
   (define (page name . elems)
     (call-with-output-file name

@@ -24,6 +24,16 @@
         )
       )
     )
+    (page "about.html"
+      (html
+        (head
+          (title "About")
+        )
+        (body
+          (p "About page")
+        )
+      )
+    )
   )
 )
 
@@ -50,4 +60,3 @@
     )
   )
 )
-
